@@ -14,94 +14,78 @@ var (
 type Task func()
 
 type Pool struct {
-	capacity 		int
-	tasks			chan Task
-	active			chan struct{}
-	quit			chan struct{}
-	wg				sync.WaitGroup
+	active 	chan struct{}
+	cap		int
+	task    chan Task
+	quit	chan struct{}
+	wg      sync.WaitGroup
 }
 
-func new(capacity int) *Pool {
-	if (capacity <= 0) {
-		capacity = 10
+func New(cap int) *Pool {
+	if cap <= 0 {
+		return nil;
 	}
-	if (capacity > 100) {
-		capacity = 50
+	if cap > 1000 {
+		return nil
 	}
-
-	p := &Pool{
-		capacity: capacity,
-		tasks: make(chan Task),
-		active: make(chan struct{}, capacity),
+	pool := &Pool {
+		active: make(chan struct{}, cap),
+		cap: cap,
+		task: make(chan Task),
 		quit: make(chan struct{}),
 	}
-	p.run()
-	return p
+
+	pool.run()
+	return pool
 }
 
-func (p *Pool) run() {
-	idx := 0
-	go func ()  {
-		select {
-		case <-p.quit:
-			return 
-		case p.active <- struct{}{}:
-			idx++
-			p.newWorker(idx)
-		}
-	}()
-	return 
-}
-
-func (p *Pool) newWorker(i int) {
+func (p Pool)newWork(i int) {
 	p.wg.Add(1)
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				println(err)
+				fmt.Println("发生错误");
 			}
-			<-p.active
 			p.wg.Done()
 		}()
-		
 		for {
 			select {
-			case <-p.quit:
-				<-p.active
-				return 
-			case t := <-p.tasks:
-				println("todo")
+			case t := <- p.task:
+				fmt.Printf("worker[%03d]: receive a task\n", i)
 				t()
+			case <- p.quit:
+				return
 			}
 		}
 	}()
 }
 
 
-func (p *Pool) Schedule(t Task) error {
+func (p Pool)run() {
+	var i int
+	for {
+		select {
+			case p.active <- struct{}{}:
+				i++
+				p.newWork(i)
+			case <-p.quit:
+				return 
+		}
+	}
+}
+
+
+func (p Pool)Schedule(t Task) error {
 	select {
-	case <- p.quit:
-		return ErrWorkerPoolFreed
-	case p.tasks <- t:
+	case <-p.quit:
+		return ErrWorkerPoolFreed ;
+	case p.task <- t:
 		return nil
 	}
 }
 
-func (p *Pool) free() {
+func (p Pool)Free() {
 	close(p.quit)
 	p.wg.Wait()
-	return 
+	fmt.Printf("workerpool freed\n")
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
