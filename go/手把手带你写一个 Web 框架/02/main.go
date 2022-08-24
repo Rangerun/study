@@ -1,17 +1,16 @@
 package main
 
 import (
-	//"coredemo/framework"
+	"coredemo/framework"
 	"net/http"
 )
 
 func main() {
+	core := framework.NewCore()
+	registerRouter(core)
 	server := &http.Server{
-		//Handler: framework.NewCore(),
+		Handler: core,
 		Addr:    "localhost:8080",
 	}
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hello, world"))
-	});
 	server.ListenAndServe()
 }
