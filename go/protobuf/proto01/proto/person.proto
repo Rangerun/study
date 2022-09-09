@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package="./;hello";
+
+package hello;
+
+message Person{
+    string name = 1;
+    int32 age = 2;
+    string email  =3;
+}
+
+// https://github.com/protocolbuffers/protobuf/releases
+
+// go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
