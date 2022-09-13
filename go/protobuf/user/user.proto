@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package="./;user";
+
+package user;
+
+message Person{
+    int32 aid = 1;
+    string title = 2;
+    int32 views = 3;
+}
+
+service UserService{
+    rpc login(Person)returns(Person);
+}
+
+// https://github.com/protocolbuffers/protobuf/releases
+
+// go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
