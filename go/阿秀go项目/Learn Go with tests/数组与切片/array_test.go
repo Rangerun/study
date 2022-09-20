@@ -10,17 +10,25 @@ func Sum(numbers []int) int {
     return sum
 }
 
-func SumAll(array ...[]int) int {
-	a := 0
-	for _, nums := range array {
-		for _, v := range nums {
-			a += v
-		} 
-	}
-	return a
+func SumAll(numbersToSum ...[]int) (sums []int) {
+    lengthOfNumbers := len(numbersToSum)
+    sums = make([]int, lengthOfNumbers)
+
+    for i, numbers := range numbersToSum {
+        sums[i] = Sum(numbers)
+    }
+    return
 }
 
+func TestSumAll(t *testing.T) {
 
+    got := SumAll([]int{1,2}, []int{0,9})
+    want := []int{3, 9}
+
+    if got != want {
+        t.Errorf("got %v want %v", got, want)
+    }
+}
 /*func Testarray(t *testing.T) {
 	got := sum([5]int{1,2,3,4,5})
 	want := 15
@@ -33,7 +41,7 @@ func SumAll(array ...[]int) int {
 
 
 
-func TestSum(t *testing.T) {
+/*func TestSum(t *testing.T) {
 
     t.Run("collection of 5 numbers", func(t *testing.T) {
         numbers := []int{1, 2, 3, 4, 5}
@@ -67,4 +75,4 @@ func TestSum(t *testing.T) {
             t.Errorf("got %d want %d", got, want)
         }
     })
-}
+}*/
