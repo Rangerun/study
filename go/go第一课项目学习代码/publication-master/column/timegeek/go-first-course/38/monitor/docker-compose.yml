@@ -20,7 +20,7 @@ services:
     restart: on-failure
     volumes:
       - /etc/localtime:/etc/localtime
-      - ./data/grafana:/var/lib/grafana
+      - ./data:/var/lib/grafana
 
   # linux node_exporter
   node_exporter:
