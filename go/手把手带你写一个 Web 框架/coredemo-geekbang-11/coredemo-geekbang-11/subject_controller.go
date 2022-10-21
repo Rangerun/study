@@ -5,6 +5,7 @@ import (
 
 	"github.com/gohade/hade/framework/gin"
 	"github.com/gohade/hade/provider/demo"
+	"github.com/gohade/hade/provider/test"
 )
 
 func SubjectAddController(c *gin.Context) {
@@ -39,4 +40,16 @@ func SubjectGetController(c *gin.Context) {
 
 func SubjectNameController(c *gin.Context) {
 	c.ISetOkStatus().IJson("ok, SubjectNameController")
+}
+
+// 对应路由 /subject/list/all
+func SubjectTestNameController(c *gin.Context) {
+	// 获取demo服务实例
+	demoService := c.MustMake(test.Key).(test.TestService)
+
+	// 调用服务实例的方法
+	foo := demoService.GetName
+
+	// 输出结果
+	c.ISetOkStatus().IJson("ok, SubjectGetController:" + foo())
 }

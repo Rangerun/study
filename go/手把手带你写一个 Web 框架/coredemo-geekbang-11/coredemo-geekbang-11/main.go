@@ -15,6 +15,7 @@ import (
 	"github.com/gohade/hade/framework/gin"
 	"github.com/gohade/hade/framework/middleware"
 	"github.com/gohade/hade/provider/demo"
+	"github.com/gohade/hade/provider/test"
 )
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
 	core := gin.New()
 	// 绑定具体的服务
 	core.Bind(&demo.DemoServiceProvider{})
-
+	core.Bind(&test.TestServiceProvider{})
 	core.Use(gin.Recovery())
 	core.Use(middleware.Cost())
 

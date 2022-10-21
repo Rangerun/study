@@ -20,6 +20,7 @@ func registerRouter(core *gin.Engine) {
 		subjectApi.GET("/:id", middleware.Test3(), SubjectGetController)
 		subjectApi.GET("/list/all", SubjectListController)
 
+		subjectApi.GET("/name",SubjectTestNameController)
 		subjectInnerApi := subjectApi.Group("/info")
 		{
 			subjectInnerApi.GET("/name", SubjectNameController)
