@@ -1,10 +1,11 @@
 package redis
 
 import (
-    "github.com/go-redis/redis/v8"
-    "github.com/gohade/hade/framework"
-    "github.com/gohade/hade/framework/contract"
-    "sync"
+	"sync"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/gohade/hade/framework"
+	"github.com/gohade/hade/framework/contract"
 )
 
 // HadeRedis 代表hade框架的redis实现
@@ -38,7 +39,6 @@ func (app *HadeRedis) GetClient(option ...contract.RedisOption) (*redis.Client, 
             return nil, err
         }
     }
-
     // 如果最终的config没有设置dsn,就生成dsn
     key := config.UniqKey()
 

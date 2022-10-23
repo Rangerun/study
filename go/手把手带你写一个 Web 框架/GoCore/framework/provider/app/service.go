@@ -23,10 +23,6 @@ func (app HadeApp) AppID() string {
 	return app.appId
 }
 
-// Version 实现版本
-func (app HadeApp) Version() string {
-	return "0.0.3"
-}
 
 // BaseFolder 表示基础目录，可以代表开发场景的目录，也可以代表运行时候的目录
 func (app HadeApp) BaseFolder() string {
@@ -58,14 +54,14 @@ func (app HadeApp) HttpFolder() string {
 	if val, ok := app.configMap["http_folder"]; ok {
 		return val
 	}
-	return filepath.Join(app.BaseFolder(), "app", "http")
+	return filepath.Join(app.BaseFolder(), "http")
 }
 
 func (app HadeApp) ConsoleFolder() string {
 	if val, ok := app.configMap["console_folder"]; ok {
 		return val
 	}
-	return filepath.Join(app.BaseFolder(), "app", "console")
+	return filepath.Join(app.BaseFolder(), "console")
 }
 
 func (app HadeApp) StorageFolder() string {
@@ -80,7 +76,7 @@ func (app HadeApp) ProviderFolder() string {
 	if val, ok := app.configMap["provider_folder"]; ok {
 		return val
 	}
-	return filepath.Join(app.BaseFolder(), "app", "provider")
+	return filepath.Join(app.BaseFolder(), "provider")
 }
 
 // MiddlewareFolder 定义业务自己定义的中间件
@@ -91,13 +87,6 @@ func (app HadeApp) MiddlewareFolder() string {
 	return filepath.Join(app.HttpFolder(), "middleware")
 }
 
-// CommandFolder 定义业务定义的命令
-func (app HadeApp) CommandFolder() string {
-	if val, ok := app.configMap["command_folder"]; ok {
-		return val
-	}
-	return filepath.Join(app.ConsoleFolder(), "command")
-}
 
 // RuntimeFolder 定义业务的运行中间态信息
 func (app HadeApp) RuntimeFolder() string {
@@ -139,12 +128,4 @@ func (app *HadeApp) LoadAppConfig(kv map[string]string) {
 	for key, val := range kv {
 		app.configMap[key] = val
 	}
-}
-
-// AppFolder 代表app目录
-func (app *HadeApp) AppFolder() string {
-	if val, ok := app.configMap["app_folder"]; ok {
-		return val
-	}
-	return filepath.Join(app.BaseFolder(), "app")
 }

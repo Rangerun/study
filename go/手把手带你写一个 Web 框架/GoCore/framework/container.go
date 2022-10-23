@@ -75,7 +75,6 @@ func (hade *HadeContainer) Bind(provider ServiceProvider) error {
 		method := provider.Register(hade)
 		instance, err := method(params...)
 		if err != nil {
-			fmt.Println("bind service provider ", key, " error: ", err)
 			return errors.New(err.Error())
 		}
 		hade.instances[key] = instance
@@ -155,14 +154,4 @@ func (hade *HadeContainer) make(key string, params []interface{}, forceNew bool)
 
 	hade.instances[key] = inst
 	return inst, nil
-}
-
-// NameList 列出容器中所有服务提供者的字符串凭证
-func (hade *HadeContainer) NameList() []string {
-	ret := []string{}
-	for _, provider := range hade.providers {
-		name := provider.Name()
-		ret = append(ret, name)
-	}
-	return ret
 }

@@ -12,6 +12,7 @@ type UserModel struct {
 }
 
 // User is gorm model
+
 type User struct {
 	ID           uint
 	Name         string

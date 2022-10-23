@@ -1,24 +1,22 @@
 package redis
 
 import (
-	"context"
+	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/gohade/hade/framework"
 	"github.com/gohade/hade/framework/contract"
-	"strconv"
-	"time"
 )
 
 // GetBaseConfig 读取database.yaml根目录结构
 func GetBaseConfig(c framework.Container) *contract.RedisConfig {
-	logService := c.MustMake(contract.LogKey).(contract.Log)
 	config := &contract.RedisConfig{Options: &redis.Options{}}
 	opt := WithConfigPath("redis")
 	err := opt(c, config)
 	if err != nil {
-		// 直接使用logService来打印错误信息
-		logService.Error(context.Background(), "parse cache config error", nil)
-		return nil
+		fmt.Println(err)
 	}
 	return config
 }

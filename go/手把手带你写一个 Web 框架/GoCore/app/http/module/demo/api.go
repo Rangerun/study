@@ -2,6 +2,7 @@ package demo
 
 import (
 	demoService "github.com/gohade/hade/app/provider/demo"
+	"github.com/gohade/hade/framework/contract"
 	"github.com/gohade/hade/framework/gin"
 )
 
@@ -15,8 +16,8 @@ func Register(r *gin.Engine) error {
 
 	r.GET("/demo/demo", api.Demo)
 	r.GET("/demo/demo2", api.Demo2)
-	r.POST("/demo/demo_post", api.DemoPost)
 	r.GET("/demo/orm", api.DemoOrm)
+	r.POST("/demo/demo_post", api.DemoPost)
 	r.GET("/demo/cache/redis", api.DemoRedis)
 	return nil
 }
@@ -34,15 +35,17 @@ func NewDemoApi() *DemoApi {
 // @Success 200 array []UserDTO
 // @Router /demo/demo [get]
 func (api *DemoApi) Demo(c *gin.Context) {
-	c.JSON(200, "this is demo for dev all")
+	configService := c.MustMake(contract.ConfigKey).(contract.Config)
+	password := configService.GetString("database.mysql.password")
+	c.JSON(200, password)
 }
 
-// Demo2  for godoc
+// Demo godoc
 // @Summary 获取所有学生
-// @Description 获取所有学生,不进行分页
+// @Description 获取所有学生
 // @Produce  json
 // @Tags demo
-// @Success 200 {array} UserDTO
+// @Success 200 array []UserDTO
 // @Router /demo/demo2 [get]
 func (api *DemoApi) Demo2(c *gin.Context) {
 	demoProvider := c.MustMake(demoService.DemoKey).(demoService.IService)

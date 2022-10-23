@@ -3,12 +3,11 @@ package env
 import (
 	"bufio"
 	"bytes"
-	"github.com/gohade/hade/framework/contract"
 	"io"
 	"os"
 	"path"
-	"strings"
 
+	"github.com/gohade/hade/framework/contract"
 	"github.com/pkg/errors"
 )
 
@@ -65,17 +64,7 @@ func NewHadeEnv(params ...interface{}) (interface{}, error) {
 			hadeEnv.maps[key] = val
 		}
 	}
-
-	// 获取当前程序的环境变量，并且覆盖.env文件下的变量
-	for _, e := range os.Environ() {
-		pair := strings.SplitN(e, "=", 2)
-		if len(pair) < 2 {
-			continue
-		}
-		hadeEnv.maps[pair[0]] = pair[1]
-	}
-
-	// 返回实例
+	
 	return hadeEnv, nil
 }
 
