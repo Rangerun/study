@@ -1,6 +1,0 @@
-map中的元素并不是一个变量，因此我们不能对map的元素进行取址操作, 禁止对map元素取址的原因是map可能随着元素数量的增长而重新分配更大的内存空间，从而可能导致之前的地址无效。
-
-map上的大部分操作，包括查找、删除、len和range循环都可以安全工作在nil值的map上，它们的行为和一个空的map类似。但是向一个nil值的map存入元素将导致一个panic异常, 在向map存数据前必须先创建map
-
-age, ok := ages["bob"]
-if !ok { /* "bob" is not a key in this map; age == 0. */ }
