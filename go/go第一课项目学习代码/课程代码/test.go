@@ -3,10 +3,13 @@ package main
 import (
 	"errors"
 	"fmt"
+	"time"
+    "net/http"
 )
 
 func main() {	
-	test02()
+	test03()
+    http.HandleFunc()
 }
 
 func test01() {
@@ -43,4 +46,26 @@ func test02() {
     }                                      
     println("MyError is not on the chain of err2")
 
+}
+
+type field struct {
+    name string
+}
+
+func (p *field) print() {
+    fmt.Println(p.name)
+}
+
+func test03() {
+    /*data1 := []*field{{"one"}, {"two"}, {"three"}}
+    for _, v := range data1 {
+        go v.print()
+    }*/
+
+    data2 := []field{{"four"}, {"five"}, {"six"}}
+    for _, v := range data2 {
+        go v.print()
+    }
+
+    time.Sleep(3 * time.Second)
 }

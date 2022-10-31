@@ -8,7 +8,7 @@ import(
 )
 
 func main()  {
-	test01()
+	test05()
 }
 
 func test01() {	
@@ -91,7 +91,9 @@ func test05() {
     var r [5]int
 
     fmt.Println("original a =", a)
+	fmt.Printf("%p\n", &a[0])
     for i, v := range a {
+		fmt.Printf("%p\n", &v)
         if i == 0 {
             a[1] = 12
             a[2] = 13
@@ -101,7 +103,9 @@ func test05() {
     fmt.Println("after for range loop, r =", r)
     fmt.Println("after for range loop, a =", a)
 	a = [5]int{1, 2, 3, 4, 5}
+	fmt.Printf("%p\n", &a[0])
 	for i, v := range a[:] {
+		fmt.Printf("%p\n", &v)
         if i == 0 {
             a[1] = 12
             a[2] = 13
@@ -112,7 +116,7 @@ func test05() {
     fmt.Println("after for range loop, r =", r)
     fmt.Println("after for range loop, a =", a)
 	
-	var m = map[string]int{
+	/*var m = map[string]int{
 		"tony": 21,
 		"tom":  22,
 		"jim":  23,
@@ -126,7 +130,7 @@ func test05() {
 		counter++
 		fmt.Println(k, v)
 	}
-	fmt.Println("counter is ", counter)
+	fmt.Println("counter is ", counter)*/
 }
 
 func test06() {
