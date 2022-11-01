@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	test06()
+	test07()
 }
 
 type T struct{}
@@ -19,19 +19,27 @@ func (T) M2() {}
 func (*T) M3() {}
 func (*T) M4() {}
 
-type T1 struct{}
+type I interface {
+	M1()
+	M2()
+	M3()
+}
 
-func (T1) M1() {}
-func (T1) M2() {}
+type Str struct {
+	I
+}
+
 
 func test01() {
-	var n int
-	dumpMethodSet(n)
-	dumpMethodSet(&n)
-
+	var i I
 	var t T
-	dumpMethodSet(t)
+	i = &t
 	dumpMethodSet(&t)
+	dumpMethodSet(i)
+	var s Str
+	
+	dumpMethodSet(s)
+
 }
 
 func dumpMethodSet(i interface{}) {
@@ -56,13 +64,7 @@ func dumpMethodSet(i interface{}) {
 }
 
 func test02() {
-	type S = T1
-	var t1 T1
-	var s1 S
-	dumpMethodSet(t1)
-	dumpMethodSet(&t1)
-	dumpMethodSet(s1)
-	dumpMethodSet(&s1)
+
 }
 
 type MyInt int
@@ -150,37 +152,38 @@ func test05() {
 	dumpMethodSet(pt1)
 }
 
-type T5 int
-type t2 struct {
+
+type test2 struct {
 	n int
 	m int
 }
 
-type I interface {
+type Test1 struct{}
+func (Test1)Test() {}
+
+type Itest1 interface {
 	M1()
 }
 
-type S1 struct {
-	T1
-	*t2
-	I
+type Stest1 struct {
+	Test1
+	*test2
+	Itest1
 	a int
 	b string
 }
 
-type S2 struct {
-	T1 T1
-	t2 *t2
-	I  I
+type Stest2 struct {
+	T1 Test1
+	t2 *test2
+	I  Itest1
 	a  int
 	b  string
 }
 
-func test06() {
-    var s1 S1
-    var s2 S2
-    s1.t2.n = 1
-    s1.M1()
-    
-
+func test07() {
+	var s1 Stest1
+	var s2 Stest2
+	dumpMethodSet(s1)
+	dumpMethodSet(s2)
 }
