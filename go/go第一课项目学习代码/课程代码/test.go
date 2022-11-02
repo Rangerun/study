@@ -2,188 +2,136 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"reflect"
-	"strings"
+	"errors"
 )
 
+
+
 func main() {
-	test07()
+	test06()
 }
 
-type T struct{}
-
-func (T) M1() {}
-func (T) M2() {}
-
-func (*T) M3() {}
-func (*T) M4() {}
-
-type I interface {
-	M1()
-	M2()
-	M3()
-}
-
-type Str struct {
-	I
-}
-
-
-func test01() {
-	var i I
+func test01() {	
+	var i interface{} = 15 // ok
+	fmt.Println(i)
+	i = "hello, golang" // ok
+	fmt.Println(i)
+	type T struct{}
 	var t T
-	i = &t
-	dumpMethodSet(&t)
-	dumpMethodSet(i)
-	var s Str
+	i = t  // ok
+	i = &t // ok
+}
+
+func test02() {	
+	var a int64 = 13
+	var i interface{} = a
+	v1, ok := i.(int64) 
+	fmt.Printf("v1=%d, the type of v1 is %T, ok=%t\n", v1, v1, ok) // v1=13, the type of v1 is int64, ok=true
+	v2, ok := i.(string)
+	fmt.Printf("v2=%s, the type of v2 is %T, ok=%t\n", v2, v2, ok) // v2=, the type of v2 is string, ok=false
+	v3 := i.(int64) 
+	fmt.Printf("v3=%d, the type of v3 is %T\n", v3, v3) // v3=13, the type of v3 is int64
+	v4 := i.([]int) // panic: interface conversion: interface {} is int64, not []int
+	fmt.Printf("the type of v4 is %T\n", v4) 
 	
-	dumpMethodSet(s)
-
-}
-
-func dumpMethodSet(i interface{}) {
-	dynTyp := reflect.TypeOf(i)
-
-	if dynTyp == nil {
-		fmt.Printf("there is no dynamic type\n")
-		return
-	}
-
-	n := dynTyp.NumMethod()
-	if n == 0 {
-		fmt.Printf("%s's method set is empty!\n", dynTyp)
-		return
-	}
-
-	fmt.Printf("%s's method set:\n", dynTyp)
-	for j := 0; j < n; j++ {
-		fmt.Println("-", dynTyp.Method(j).Name)
-	}
-	fmt.Printf("\n")
-}
-
-func test02() {
-
-}
-
-type MyInt int
-
-func (n *MyInt) Add(m int) {
-	*n = *n + MyInt(m)
-}
-
-type t struct {
-	a int
-	b int
-}
-
-type S struct {
-	*MyInt
-	t
-	io.Reader
-	s string
-	n int
-}
-
-func test03() {
-	m := MyInt(17)
-	r := strings.NewReader("hello, go")
-	s := S{
-		MyInt: &m,
-		t: t{
-			a: 1,
-			b: 2,
-		},
-		Reader: r,
-		s:      "demo",
-	}
-
-	var sl = make([]byte, len("hello, go"))
-	s.Reader.Read(sl)
-	fmt.Println(string(sl)) // hello, go
-	s.MyInt.Add(5)
-	fmt.Println(*(s.MyInt)) // 22
-}
-
-type E1 interface {
-	M1()
-	M2()
-	M3()
-}
-
-type E2 interface {
-	M1()
-	M2()
-	M4()
-}
-
-type T2 struct {
-	E1
-	E2
-}
-
-func (T2) M1() { println("T's M1") }
-func (T2) M2() { println("T's M2") }
-
-func test04() {
-	t := T2{}
-	t.E1.M1()
-	t.E2.M2()
-}
-
-type T3 struct{}
-
-func (T3) M1()  {}
-func (*T3) M2() {}
-
-type T4 T
-
-func test05() {
-	var t T3
-	var pt *T3
-	var t1 T4
-	var pt1 *T4
-
-	dumpMethodSet(t)
-	dumpMethodSet(t1)
-
-	dumpMethodSet(pt)
-	dumpMethodSet(pt1)
 }
 
 
-type test2 struct {
-	n int
-	m int
+type MyInterface interface {
+    M1()
 }
 
-type Test1 struct{}
-func (Test1)Test() {}
-
-type Itest1 interface {
-	M1()
+type T int
+               
+func (T) M1() {
+    println("T's M1")
+}              
+               
+func test03() {  
+    var t T    
+    var i interface{} = t
+    v1, ok := i.(MyInterface)
+    if !ok {   
+        panic("the value of i is not MyInterface")
+    }          
+    v1.M1()    
+    fmt.Printf("the type of v1 is %T\n", v1) // the type of v1 is main.T
+               
+    i = int64(13)
+    v2, ok := i.(MyInterface)
+    fmt.Printf("the type of v2 is %T\n", v2) // the type of v2 is <nil>
+    // v2 = 13 //  cannot use 1 (type int) as type MyInterface in assignment: int does not implement MyInterface (missing M1   method) 
 }
 
-type Stest1 struct {
-	Test1
-	*test2
-	Itest1
-	a int
-	b string
+func test04() {	
+	var err error
+	fmt.Printf("%T\n", err)
+	err = errors.New("error1")
+	fmt.Printf("%T\n", err)  // *errors.errorString
 }
 
-type Stest2 struct {
-	T1 Test1
-	t2 *test2
-	I  Itest1
-	a  int
-	b  string
+
+type QuackableAnimal interface {
+    Quack()
 }
 
-func test07() {
-	var s1 Stest1
-	var s2 Stest2
-	dumpMethodSet(s1)
-	dumpMethodSet(s2)
+type Duck struct{}
+
+func (Duck) Quack() {
+    println("duck quack!")
+}
+
+type Dog struct{}
+
+func (Dog) Quack() {
+    println("dog quack!")
+}
+
+type Bird struct{}
+
+func (Bird) Quack() {
+    println("bird quack!")
+}                         
+                          
+func AnimalQuackInForest(a QuackableAnimal) {
+    a.Quack()             
+}                         
+                          
+func test05() {             
+    animals := []QuackableAnimal{new(Duck), new(Dog), new(Bird)}
+    for _, animal := range animals {
+        AnimalQuackInForest(animal)
+    }  
+}
+
+
+
+type MyError struct {
+    error
+}
+
+var ErrBad = MyError{
+    error: errors.New("bad things happened"),
+}
+
+func bad() bool {
+    return false
+}
+
+func returnsError() error {
+    var p *MyError = nil
+    if bad() {
+        p = &ErrBad
+    }
+	fmt.Println(p)
+    return p
+}
+
+func test06() {
+	err := returnsError()
+    if err != nil {
+        fmt.Printf("error occur: %+v\n", err)
+        return
+    }
+    fmt.Println("ok")
 }
