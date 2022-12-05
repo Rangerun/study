@@ -33,6 +33,10 @@ import (
 	}
 }*/
 
+func testDouble(op int32) int32 {
+	return op * op
+}
+
 func BenchmarkStrAdd(b *testing.B) {
 	elems := []string{"1", "2", "3", "4"}
 	b.ResetTimer()
